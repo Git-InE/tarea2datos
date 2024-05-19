@@ -14,7 +14,7 @@ class super_string {
         int length = 0; // Largo del super-string
         nodo* root = nullptr; // Raíz del super-string
     public:
-        super_string() {}
+        super_string(){};
         void limpiarRecursivo(nodo*& nodoActual); //nuevo
         void juntar(super_string &s);
         void agregar(char c); // Insertar un caracter en la última posición
@@ -27,7 +27,6 @@ class super_string {
         void limpiar(); // Se deben borrar todos los nodos del super-string
 };
 
-
 void super_string::juntar(super_string &s) {
     nodo* temp = root;
     while (temp->right){
@@ -36,7 +35,9 @@ void super_string::juntar(super_string &s) {
     temp->right = s.root;
 
 }
-//terminado
+
+
+//terminado...
 void super_string::agregar(char c){
     nodo* nuevo = new nodo(length, c);
     if (root == nullptr) root = nuevo;
@@ -59,6 +60,8 @@ void super_string::reverso(){
 int super_string::recortar(){
     return 0;
 }
+
+/*-----------------------------------------------------------*/
 
 string super_string::stringizar() {
     string str;
