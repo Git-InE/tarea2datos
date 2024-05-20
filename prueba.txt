@@ -1,0 +1,2 @@
+INSERTAR 0 El_Carlos
+MOSTRAR

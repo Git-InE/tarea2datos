@@ -2,34 +2,44 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "super_string.c++"
 using namespace std;
 
+// Funciones: 
+#include "super_string.c++"
+
+
 int main(){
+
+    // Apertura de archivo
     ifstream archivo;
+    archivo.open("prueba.txt",ios::in);
+
+    // Definicion de variables
     string linea;
+
+    // Creacion de objeto tipo super_string
     super_string ss;
-	archivo.open("prueba.txt");
+	
+    // Desarrrollo
     if (!archivo.is_open()){
         cerr << "Error al abrir el archivo." << endl;
         return 1;
 	}
-    ss.agregar('h');
-    ss.agregar('o');
-    ss.agregar('l');
-    ss.agregar('a');
+
     while (getline(archivo, linea)){
         istringstream iss(linea);
         string operacion;
-        iss >> operacion;
-        if (operacion == "INSERTAR"){
-            int i;
-            string s;
-            iss >> i >> s;
+        iss >> operacion;               // Pregunta por operacion
+        if (operacion == "INSERTAR"){   // Operacion INSERTAR
+            int i;                      //posicion i
+            string S;                   //String que se quiere insertar
+            iss >> i >> S;
         }
-        if (operacion == "MOSTRAR"){
-            ss.stringizar();  
+        if (operacion == "MOSTRAR"){    // Operacion MOSTRAR
+            cout<<ss.stringizar()<<endl;  
         }
         }
+        
     archivo.close();
+    return 0;
 }
