@@ -6,38 +6,45 @@ class super_string {
 
         struct nodo {                                               // Struct 
 
-            nodo *left = nullptr, *right = nullptr;                 // Definimos *left y *raigth com puntero nulos
+            nodo *left = nullptr, *right = nullptr;                 // Definimos *left y *right com puntero nulos
             int index;                                              // Indice
             char c;                                                 // Elemento
             nodo(int index, char c){}
             nodo(){}
             };
-
+            
         int height = 0;                                             // Altura del árbol
         int length = 0;                                             // Largo del super-string
         nodo* root = nullptr;                                       // Raíz del super-string
-
+        void reversoHelp(nodo* root);                                                          
+        void limpiarRecursivo(nodo*& nodoActual);                   //nuevo
+        void stringizarRecursivo(nodo* nodoActual, string &str);
     public:
         super_string(){};
-        void limpiarRecursivo(nodo*& nodoActual);                   //nuevo
         void juntar(super_string &s);
         void agregar(char c);                                       // Insertar un caracter en la última posición
-                                                                    // En la izquierda esta el super_string a y en la derecha el super_string b
-        
+        void separar(int i, super_string &a, super_string &b);      // En la izquierda esta el super_string a y en la derecha el super_string b
         void Show();
-        void separar(int i, super_string &a, super_string &b);
-
-        
+        void limpiar();                                             // Se deben borrar todos los nodos del super-string
         void reverso();                                             // No debe cambiar la altura del árbol
         int recortar();                                             // Retorna this->height después de recortar
-        string stringizar();                                        // Debe ser O(n)
-        void stringizar(nodo* nodoActual, string &str);
-        void limpiar();                                             // Se deben borrar todos los nodos del super-string
-        
-
-
+        string stringizar();                                        // Debe ser O(n)     
 };
 //terminado...
+
+string super_string::stringizar() {
+    string str;
+    stringizarRecursivo(root, str);
+    return str;
+}
+
+void super_string::stringizarRecursivo(nodo* nodoActual, string& str) {
+    if (nodoActual == nullptr) return;
+    
+    stringizarRecursivo(nodoActual->left, str);
+    str += nodoActual->c;
+    stringizarRecursivo(nodoActual->right, str);
+}
 
 //Show esta listo
 
@@ -82,7 +89,7 @@ void super_string::agregar(char c){
 void super_string::separar(int i, super_string &a, super_string &b){
     super_string aux;
     nodo* temp = a.root;
-    int round=0,nuevo_indice=0;
+    int round=0;
     while(temp!=nullptr){
         round++;
         if (round<=i){
@@ -111,8 +118,8 @@ void super_string::juntar(super_string &s){
     root = ss_total.root; 
 }
 
-/*
 
+/*
 void super_string::juntar(super_string &s) {
     nodo* temp = root;
     while (temp->right != nullptr){
@@ -120,24 +127,7 @@ void super_string::juntar(super_string &s) {
     }
     temp->right = s.root;
 }
-
-void super_string::stringizar(nodo* n, string &str) {
-    if(n){
-        stringizar(n->left, str);
-        str += n->c;
-        stringizar(n->right, str);
-    }
-}
-
-
-
-string super_string::stringizar(){
-    string str;
-    stringizar(root, str);
-    cout << str;
-    return str;
-}
-
+*/
 
 void super_string::limpiar() {
     limpiarRecursivo(root);
@@ -154,4 +144,19 @@ void super_string::limpiarRecursivo(nodo*& nodoActual){
         nodoActual = nullptr;
     }
 }
-*/
+void super_string::reversoHelp(nodo* root) {
+    if (root == nullptr) return;
+
+    // Intercambiar los subárboles izquierdo y derecho
+    nodo* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+
+    // Revertir los subárboles izquierdo y derecho recursivamente
+    reversoHelp(root->left);
+    reversoHelp(root->right);
+}
+void super_string::reverso() {
+    if (root == nullptr) return;
+    reversoHelp(root);
+}
