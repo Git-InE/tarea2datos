@@ -19,6 +19,7 @@ class super_string {
         void reversoHelp(nodo* root);                                                          
         void limpiarRecursivo(nodo*& nodoActual);                   //nuevo
         void stringizarRecursivo(nodo* nodoActual, string &str);
+        void juntarRecursivo(nodo* nodoActual, super_string &ss_total);
     public:
         super_string(){};
         void juntar(super_string &s);
@@ -40,7 +41,6 @@ string super_string::stringizar() {
 
 void super_string::stringizarRecursivo(nodo* nodoActual, string& str) {
     if (nodoActual == nullptr) return;
-    
     stringizarRecursivo(nodoActual->left, str);
     str += nodoActual->c;
     stringizarRecursivo(nodoActual->right, str);
@@ -64,6 +64,7 @@ void super_string::Show(){
 //Agregar esta listo
 
 void super_string::agregar(char c){
+    if (c == '\0') return;
     nodo* nuevo = new nodo(length, c); // Creamos un espacio de memoria para el nuevo nodo
     nuevo->c = c;
     if (root == nullptr){              // Caso en el que el arbol este vacio 
@@ -87,6 +88,7 @@ void super_string::agregar(char c){
 //Separar esta listo
 
 void super_string::separar(int i, super_string &a, super_string &b){
+    if (i > length) return;
     super_string aux;
     nodo* temp = a.root;
     int round=0;
@@ -102,32 +104,34 @@ void super_string::separar(int i, super_string &a, super_string &b){
     }
     a=aux;
 }
-void super_string::juntar(super_string &s){
-    super_string ss_total;
-    nodo* temp1 = root;
-    nodo* temp2 = s.root;
-    while (temp1!= nullptr){
-        ss_total.agregar(temp1->c);
-        temp1 = temp1->right;
-    }
-    while (temp2!= nullptr){
-        ss_total.agregar(temp2->c);
-        temp2 = temp2->right;
-
-    }
-    root = ss_total.root; 
-}
-
-
-/*
 void super_string::juntar(super_string &s) {
-    nodo* temp = root;
-    while (temp->right != nullptr){
-        temp = temp->right;
+    if (root == nullptr) {
+        root = s.root;
+        height = s.height;
+        length = s.length;
+        return;
     }
-    temp->right = s.root;
+
+    if (s.root == nullptr) {
+        return; // No hay nada que juntar
+    }
+
+    super_string ss_total;
+    juntarRecursivo(root, ss_total);
+    juntarRecursivo(s.root, ss_total);
+
+    root = ss_total.root;
+    height = ss_total.height;
+    length = ss_total.length;
 }
-*/
+
+void super_string::juntarRecursivo(nodo* nodoActual, super_string &ss_total) {
+    if (nodoActual == nullptr) return;
+
+    juntarRecursivo(nodoActual->left, ss_total);
+    ss_total.agregar(nodoActual->c);
+    juntarRecursivo(nodoActual->right, ss_total);
+}
 
 void super_string::limpiar() {
     limpiarRecursivo(root);
@@ -156,7 +160,7 @@ void super_string::reversoHelp(nodo* root) {
     reversoHelp(root->left);
     reversoHelp(root->right);
 }
-void super_string::reverso() {
+void super_string::reverso(){
     if (root == nullptr) return;
     reversoHelp(root);
 }

@@ -69,20 +69,16 @@ int main(){
             ss2.limpiar();
             ss3.limpiar();        
         }
-        if (operacion == "REVERSO"){ 
-            int i;
-            int j;
-            iss >> i >> j;
-            ss1.separar(i,ss1,ss2); // ss2 contiene la parte a revertir y la parte que no
-            ss2.reverso(); // Se revierte ss2
-            ss2.separar(i-j,ss2,ss3); // ss3 contiene la parte que no se revertirá
-            ss1.juntar(ss3); // Se junta ss1 con la parte que no se revertió (ss3)  
-            ss1.juntar(ss2); // Se junta ss1 con la parte revertida (ss2)
-            ss3.limpiar();
-            ss2.limpiar();
+        if (operacion == "REVERSO") {
+            int l, r;
+            iss >> l >> r; // l y r son las posiciones de inicio y fin de la subcadena a invertir (inclusivas)
+            ss1.separar(l, ss1, ss2); // ss2 contiene la parte antes de la subcadena a inver
+            ss2.separar(r - l + 1, ss2, ss3);
+            ss2.reverso();
+            ss1.juntar(ss2);
+            ss1.juntar(ss3);
         }
-    }
-        
+    }   
     archivo.close();
     return 0;
 }
