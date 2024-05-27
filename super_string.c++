@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <math.h>
 using namespace std;
 class super_string {
     private:
@@ -16,7 +17,8 @@ class super_string {
         int height = 0;                                             // Altura del árbol
         int length = 0;                                             // Largo del super-string
         nodo* root = nullptr;                                       // Raíz del super-string
-        void reversoHelp(nodo* root);                                                          
+        void reversoHelp(nodo* root);
+        nodo* recortarRecursivo(const string& str, int inicio, int fin);                                                          
         void limpiarRecursivo(nodo*& nodoActual);                   //nuevo
         void stringizarRecursivo(nodo* nodoActual, string &str);
         void juntarRecursivo(nodo* nodoActual, super_string &ss_total);
@@ -31,6 +33,31 @@ class super_string {
         int recortar();                                             // Retorna this->height después de recortar
         string stringizar();                                        // Debe ser O(n)     
 };
+//REVISAR
+int super_string::recortar() {
+    if (root == nullptr) return 0;
+
+    // Obtener el string del árbol en inorden
+    string str = stringizar();
+    int largo = length;
+    int altura = log2(length) + 1;
+    root = recortarRecursivo(str, 0, length - 1);
+    return altura;
+}
+
+super_string::nodo* super_string::recortarRecursivo(const string& str, int inicio, int fin) {
+    if (inicio > fin) return nullptr;
+
+    int mid = (inicio + fin) / 2;
+
+    nodo* nuevoNodo = new nodo(mid, str[mid]);
+    nuevoNodo->left = recortarRecursivo(str, inicio, mid - 1);
+    nuevoNodo->right = recortarRecursivo(str, mid + 1, fin);
+
+    return nuevoNodo;
+}
+//REVISAR
+//.......................................................................................................
 //terminado...
 
 string super_string::stringizar() {

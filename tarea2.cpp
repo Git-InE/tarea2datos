@@ -27,20 +27,7 @@ int main(){
         cerr << "Error al abrir el archivo." << endl;
         return 1;
 	}
-    /*
-    ss1.agregar('H');
-    ss1.agregar('O');
-    ss1.agregar('L');
-    ss1.agregar('A');
-    ss1.agregar('_');
-    ss1.agregar('M');
-    ss1.agregar('U');
-    ss1.agregar('N');
-    ss1.agregar('D');
-    ss1.agregar('O');
-    */
 
-    
     while (getline(archivo, linea)){
         istringstream iss(linea);
         string operacion;
@@ -77,6 +64,10 @@ int main(){
             ss2.reverso();
             ss1.juntar(ss2);
             ss1.juntar(ss3);
+        }
+        if (operacion == "RECORTAR"){
+        cout << ss1.recortar() << endl;
+
         }
     }   
     archivo.close();
