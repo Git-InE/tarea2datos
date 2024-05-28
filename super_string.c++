@@ -18,7 +18,7 @@ class super_string {
         int length = 0;                                             // Largo del super-string
         nodo* root = nullptr;                                       // Raíz del super-string
         void reversoHelp(nodo* root);
-        nodo* recortarRecursivo(const string& str, int inicio, int fin);                                                          
+        void recortarRecursivo(nodo*& nodoActual, const string& str, int inicio, int fin);
         void limpiarRecursivo(nodo*& nodoActual);                   //nuevo
         void stringizarRecursivo(nodo* nodoActual, string &str);
         void juntarRecursivo(nodo* nodoActual, super_string &ss_total);
@@ -36,26 +36,53 @@ class super_string {
 //REVISAR
 int super_string::recortar() {
     if (root == nullptr) return 0;
-
     // Obtener el string del árbol en inorden
     string str = stringizar();
     int largo = length;
-    int altura = log2(length) + 1;
-    root = recortarRecursivo(str, 0, length - 1);
-    return altura;
+    int altura = (length)>0 ? log2(length) + 1 : 0;
+    // Reemplazar el árbol con un nuevo árbol que contenga el string
+    limpiar();
+    recortarRecursivo(root, str, 0, str.length());
+    height = altura;
+    return height;
 }
 
-super_string::nodo* super_string::recortarRecursivo(const string& str, int inicio, int fin) {
-    if (inicio > fin) return nullptr;
+void super_string::recortarRecursivo(nodo*& nodoActual, const string& str, int inicio, int fin) {
+    if (inicio > fin) return;
+    int medio = (inicio + fin) / 2; 
+    nodo* nuevoNodo = new nodo(medio, str[medio]);
+    nuevoNodo->c = str[medio];
+    if (nodoActual == nullptr) {
+        nodoActual = nuevoNodo;
+    }
+    if (fin - inicio <= 2){         //caso par (partiendo del 0)
+        if (medio - 1 >= 0)
+            {nodoActual->left = new nodo(medio - 1, str[medio - 1]);
+            nodoActual->left->c = str[medio-1];
+            }
+        if (medio + 1 <= str.length()){
+            nodoActual->right = new nodo(medio + 1, str[medio + 1]);
+            nodoActual->right->c = str[medio+1];
+            }
+        return;
+    }
+    if (fin - inicio == -2){         //caso par (partiendo del 0)
+        nodoActual->left = new nodo(medio, str[medio]);
+        nodoActual->left->c = str[++medio];
+        nodoActual->c = str[medio];
+        if (medio + 1 <= str.length()){
+            nodoActual->right = new nodo(medio + 1, str[medio + 1]);
+            nodoActual->right->c = str[medio+1];
+            }
+        return;
+        }
+    
+    // E-l-C-a-r-l-o-s-e-s-b-u-e-n-o
+    recortarRecursivo(nodoActual->left, str, inicio, medio);
+    recortarRecursivo(nodoActual->right, str, medio+1, fin);
 
-    int mid = (inicio + fin) / 2;
-
-    nodo* nuevoNodo = new nodo(mid, str[mid]);
-    nuevoNodo->left = recortarRecursivo(str, inicio, mid - 1);
-    nuevoNodo->right = recortarRecursivo(str, mid + 1, fin);
-
-    return nuevoNodo;
 }
+
 //REVISAR
 //.......................................................................................................
 //terminado...
