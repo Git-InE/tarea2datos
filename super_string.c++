@@ -130,21 +130,39 @@ void super_string::agregar(char c){
 
 }
 
-//Separar esta listo
 
 void super_string::separarRecursivo(nodo* nodoActual, int i, int& count, super_string &a, super_string &b) {
-    if (nodoActual == nullptr) {
+    if (nodoActual == nullptr || count >= length) {
         return;
     }
-    separarRecursivo(nodoActual->left, i, count, a, b);
-    if (count < i) {
-        a.agregar(nodoActual->c);
+    nodo* left = nodoActual->left;
+    nodo* right = nodoActual->right;
+    nodoActual->left = nodoActual->right = nullptr; // Disconnect the node from the original super_string
+    separarRecursivo(left, i, count, a, b);
+    if (count < i - 1) { // Change this line
+        if (a.root == nullptr) {
+            a.root = nodoActual;
+        } else {
+            nodo* last = a.root;
+            while (last->right != nullptr) {
+                last = last->right;
+            }
+            last->right = nodoActual;
+        }
     } else {
-        b.agregar(nodoActual->c);
+        if (b.root == nullptr) {
+            b.root = nodoActual;
+        } else {
+            nodo* last = b.root;
+            while (last->right != nullptr) {
+                last = last->right;
+            }
+            last->right = nodoActual;
+        }
     }
     count++;
-
-    separarRecursivo(nodoActual->right, i, count, a, b);
+    separarRecursivo(right, i, count, a, b);
+    nodoActual = nullptr; // Nullify the parent's pointer to the node
 }
 
 void super_string::separar(int i, super_string &a, super_string &b) {
@@ -176,9 +194,16 @@ void super_string::juntar(super_string &s) {
 void super_string::juntarRecursivo(nodo* nodoActual, super_string &ss_total) {
     if (nodoActual == nullptr) return;
 
-    juntarRecursivo(nodoActual->left, ss_total);
+    nodo* left = nodoActual->left;
+    nodo* right = nodoActual->right;
+
+    // Disconnect the node from the original super_string
+    nodoActual->left = nullptr;
+    nodoActual->right = nullptr;
+
+    juntarRecursivo(left, ss_total);
     ss_total.agregar(nodoActual->c);
-    juntarRecursivo(nodoActual->right, ss_total);
+    juntarRecursivo(right, ss_total);
 }
 
 void super_string::limpiar() {

@@ -62,12 +62,13 @@ int main(){
             ss1.separar(l, ss1, ss2); // ss2 contiene la parte antes de la subcadena a inver
             ss2.separar(r - l + 1, ss2, ss3);
             ss2.reverso();
+            cout << "stringizar ss2: " << ss2.stringizar() << endl;
             ss1.juntar(ss2);
             ss1.juntar(ss3);
         }
         if (operacion == "RECORTAR"){
         cout << ss1.recortar() << endl;
-        cout << ss1.stringizar() << endl;
+ 
         }
     }   
     archivo.close();
