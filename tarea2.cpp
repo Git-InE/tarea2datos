@@ -67,7 +67,7 @@ int main(){
         }
         if (operacion == "RECORTAR"){
         cout << ss1.recortar() << endl;
-
+        cout << ss1.stringizar() << endl;
         }
     }   
     archivo.close();
