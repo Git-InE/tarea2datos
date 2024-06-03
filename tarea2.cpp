@@ -5,7 +5,7 @@
 using namespace std;
 
 // Funciones: 
-#include "super_string.c++"
+#include "super_string.cpp"
 
 
 int main(){
