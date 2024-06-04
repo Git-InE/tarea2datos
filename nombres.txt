@@ -10,4 +10,4 @@ Apellido: Pérez Lantadilla
 Roll:     202373528-0
 Paralelo: 200
 Programo:
-Desarrollo e implemento el main, funciones basicas que se ocupan varias veces en el desarrollo de la tarea, testing enfocado a los casos bace.
+Desarrollo e implemento el main, funciones basicas que se ocupan varias veces en el desarrollo de la tarea, testing enfocado a los casos base.
