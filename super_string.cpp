@@ -65,10 +65,16 @@ void super_string::recortarHelp(nodo*& nodoActual, nodo** arreglo, int inicio, i
         return;
     }
     int medio = (inicio + fin) / 2;
+    if (arreglo[medio] == nullptr) {
+        return;
+    }
     if (medio == 0){
         nuevoNodo(arreglo[medio]->c,arreglo[medio]->index);
     }
     nodoActual = arreglo[medio];
+    if (nodoActual == nullptr) {
+        return;
+    }
     recortarHelp(nodoActual->left, arreglo, inicio, medio - 1);
     recortarHelp(nodoActual->right, arreglo, medio + 1, fin);
 }
@@ -127,7 +133,6 @@ void super_string::separar(int i, super_string& izquierdo, super_string& derecho
         inordenArreglo(root, enOrden, indice);
         recortarHelp(izquierdo.root, enOrden, 0, i - 1);
         recortarHelp(derecho.root, enOrden, i, length - 1);
-
         izquierdo.length = i;
         derecho.length = length - i;
         izquierdo.height = calcularAltura(izquierdo.root);
@@ -136,7 +141,7 @@ void super_string::separar(int i, super_string& izquierdo, super_string& derecho
         delete[] enOrden;
     }
     else{
-        if (i > length) return;
+        if (i>length) return;
         super_string aux;
         nodo* temp = izquierdo.root;
         int round=0;
@@ -156,6 +161,7 @@ void super_string::separar(int i, super_string& izquierdo, super_string& derecho
 
 //.......................................................................................................
 void super_string::reverso() {
+    if (root == nullptr) return;
     reversoHelp(root);
     int indice = 0;
     inordenIndice(root, indice);
@@ -167,7 +173,6 @@ void super_string::reversoHelp(nodo* root) {
     nodo* temp = root->left;
     root->left = root->right;
     root->right = temp;
-    //cout<< "nodo actual: " << root->c << endl;
     // Revertir los subárboles izquierdo y derecho recursivamente
     reversoHelp(root->left);
     reversoHelp(root->right);

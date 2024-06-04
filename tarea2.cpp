@@ -59,13 +59,16 @@ int main(){
         if (operacion == "REVERSO") {
             int l, r;
             iss >> l >> r; // l y r son las posiciones de inicio y fin de la subcadena a invertir (inclusivas)
-            if (r < ss1.stringizar().length()-1) {
-            ss1.separar(l, ss1, ss2); // ss2 contiene la parte antes de la subcadena a inver
-            ss2.separar(r - l + 1, ss2, ss3);
-            }
-            ss1.reverso();
-            ss2.juntar(ss3);
+            if ((r < ss1.stringizar().length()-1) || (l > 0)){
+            ss1.separar(l, ss1, ss2); // ss2 contiene la parte antes de la subcadena a invertir
+            ss2.separar(r-l+1, ss2, ss3);
+            ss2.reverso();
             ss1.juntar(ss2);
+            ss1.juntar(ss3);
+            ss2.limpiar();
+            ss3.limpiar();
+            }
+            else ss1.reverso();
         }
         if (operacion == "RECORTAR"){
         cout << ss1.recortar() << endl;
