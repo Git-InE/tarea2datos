@@ -7,7 +7,7 @@ class super_string {
 
         struct nodo {                                               // Struct 
 
-            nodo *left = nullptr, *right = nullptr;                 // Definimos *left y *right com puntero nulos
+            nodo *left = nullptr, *right = nullptr;                 // Definimos *left y *right como puntero nulos
             int index;                                              // Indice
             char c;                                                 // Elemento
             nodo(int index, char c){}
@@ -17,42 +17,46 @@ class super_string {
         int height = 0;                                             // Altura del árbol
         int length = 0;                                             // Largo del super-string
         nodo* root = nullptr;                                       // Raíz del super-string
+        void inordenArreglo(nodo* nodoActual, nodo** arreglo, int& indice);
+        void inordenIndice(nodo* nodoActual, int& indice);
         void reversoHelp(nodo* root);
         void limpiarRecursivo(nodo*& nodoActual);                   //nuevo
         void stringizarRecursivo(nodo* nodoActual, string &str);
         void juntarRecursivo(nodo* nodoActual, super_string &ss_total);
-        void recorrerInorden(nodo* nodoActual, nodo** arreglo, int& indice);
         int calcularAltura(nodo* nodoActual);
         void recortarHelp(nodo*& nodoActual, nodo** arreglo, int inicio, int fin);
-        void separarRecursivo(nodo* nodoActual, int i, int& count, super_string &a, super_string &b);
     public:
+        bool esArbol = false;
         super_string(){};
         void juntar(super_string &s);
+        void nuevoNodo(char c, int index);
+        void insertar(int index, char c);
         void agregar(char c);                                       // Insertar un caracter en la última posición
-        void separar(int i, super_string &a, super_string &b);      // En la izquierda esta el super_string a y en la derecha el super_string b
+        void separar(int i, super_string &a, super_string &b);      // En la izquierda esta el super_string a y en la derecha el super_string despuesDe
         void limpiar();                                             // Se deben borrar todos los nodos del super-string
         void reverso();                                             // No debe cambiar la altura del árbol
         int recortar();                                             // Retorna this->height después de recortar
         string stringizar();                                        // Debe ser O(n)     
 };
 //REVISAR
-
 int super_string::recortar() {
     if (root == nullptr) return 0;
-
+    esArbol = true;
     nodo** arreglo = new nodo*[length];
     int indice = 0;
-    recorrerInorden(root, arreglo, indice);
+    inordenArreglo(root, arreglo, indice);
     recortarHelp(root, arreglo, 0, length - 1);
+    inordenIndice(root, indice=0);
     delete[] arreglo;
     return height=calcularAltura(root);
 }
 
-void super_string::recorrerInorden(nodo* nodoActual, nodo** arreglo, int& indice) { //lo mismo que stringizar pero en un arreglo ahora
+void super_string::inordenArreglo(nodo* nodoActual, nodo** arreglo, int& indice) { //lo mismo que stringizar pero en un arreglo ahora
     if (nodoActual == nullptr) return;
-    recorrerInorden(nodoActual->left, arreglo, indice);
+    inordenArreglo(nodoActual->left, arreglo, indice);
     arreglo[indice++] = nodoActual;
-    recorrerInorden(nodoActual->right, arreglo, indice);
+
+    inordenArreglo(nodoActual->right, arreglo, indice);
 }
 
 void super_string::recortarHelp(nodo*& nodoActual, nodo** arreglo, int inicio, int fin) {
@@ -61,6 +65,9 @@ void super_string::recortarHelp(nodo*& nodoActual, nodo** arreglo, int inicio, i
         return;
     }
     int medio = (inicio + fin) / 2;
+    if (medio == 0){
+        nuevoNodo(arreglo[medio]->c,arreglo[medio]->index);
+    }
     nodoActual = arreglo[medio];
     recortarHelp(nodoActual->left, arreglo, inicio, medio - 1);
     recortarHelp(nodoActual->right, arreglo, medio + 1, fin);
@@ -72,16 +79,87 @@ int super_string::calcularAltura(nodo* nodoActual) {
     int alturaDerecha = calcularAltura(nodoActual->right);
     return 1 + max(alturaIzquierda, alturaDerecha);
 }
-//anteriores
-//REVISAR
 //.......................................................................................................
-//terminado...
 
-void super_string::reverso(){
-    if (root == nullptr) return;
-    reversoHelp(root);
+void super_string::nuevoNodo(char c, int index){
+    nodo* nuevo = new nodo(index, c);
+    nuevo->c = c;
+    nuevo->index = index;
+    return;
+}
+void super_string::insertar(int index, char c) {
+        nodo* nuevoNodo = new nodo(index, c);
+        if (root == nullptr) {
+            root = nuevoNodo;
+            length++;
+            height = 1;
+            return;
+        }
+
+        nodo* actual = root;
+        nodo* padre = nullptr;
+        while (actual != nullptr) {
+            padre = actual;
+            if (index < actual->index)
+                actual = actual->left;
+            else if (index > actual->index)
+                actual = actual->right;
+            else // índice duplicado, puedes manejar este caso según tus necesidades
+                return;
+        }
+
+        if (index < padre->index)
+            padre->left = nuevoNodo;
+        else
+            padre->right = nuevoNodo;
+
+        length++;
+        height = calcularAltura(root);
+    }
+
+void super_string::separar(int i, super_string& izquierdo, super_string& derecho) {
+    if (i >= length)
+        return;
+
+    if (esArbol == true) {
+        nodo** enOrden = new nodo*[length];
+        int indice = 0;
+        inordenArreglo(root, enOrden, indice);
+        recortarHelp(izquierdo.root, enOrden, 0, i - 1);
+        recortarHelp(derecho.root, enOrden, i, length - 1);
+
+        izquierdo.length = i;
+        derecho.length = length - i;
+        izquierdo.height = calcularAltura(izquierdo.root);
+        derecho.height = calcularAltura(derecho.root);
+
+        delete[] enOrden;
+    }
+    else{
+        if (i > length) return;
+        super_string aux;
+        nodo* temp = izquierdo.root;
+        int round=0;
+        while(temp!=nullptr){
+            round++;
+            if (round<=i){
+                aux.agregar(temp->c);
+            }
+         else{
+                derecho.agregar(temp->c);
+            }
+            temp=temp->right;
+        }
+        izquierdo=aux;
+    }
 }
 
+//.......................................................................................................
+void super_string::reverso() {
+    reversoHelp(root);
+    int indice = 0;
+    inordenIndice(root, indice);
+}
 void super_string::reversoHelp(nodo* root) {
     if (root == nullptr) return;
 
@@ -94,7 +172,14 @@ void super_string::reversoHelp(nodo* root) {
     reversoHelp(root->left);
     reversoHelp(root->right);
 }
-
+// ACTUALIZA INDICES
+void super_string::inordenIndice(nodo* nodoActual, int& indice) {
+    if (nodoActual == nullptr) return;
+    inordenIndice(nodoActual->left, indice);
+    nodoActual->index = indice++;
+    inordenIndice(nodoActual->right, indice);
+}
+//.......................................................................................................
 string super_string::stringizar() {
     string str;
     stringizarRecursivo(root, str);
@@ -128,100 +213,22 @@ void super_string::agregar(char c){
         nuevo->index = height+=1;          // Inserta el nuevo nodo (nuevo) a la derecha del ultimo nodo, el cual pasa a ser el PEN-ULTUMO nodo. 
     }
     length++;                          // El largo del super string crece en 1 puesto que aumentamos en 1 caracter su largo
-
 }
 
-
-void super_string::separarRecursivo(nodo* nodoActual, int i, int& count, super_string &a, super_string &b) {
-    if (nodoActual == nullptr) {
-        return;
-    }
-    
-    if (count < i) {
-        separarRecursivo(nodoActual->left, i, count, a, b);
-        
-        if (a.root == nullptr) {
-            a.root = nodoActual;
-            nodoActual->left = nullptr;
-            nodoActual->right = nullptr;
-        } else {
-            nodo* last = a.root;
-            while (last->right != nullptr) {
-                last = last->right;
-            }
-            last->right = nodoActual;
-            nodoActual->left = nullptr;
-            nodoActual->right = nullptr;
-        }
-        a.length++;
-        a.height = max(a.height, nodoActual->index + 1);
-        
-        count++;
-        if (nodoActual->right != nullptr) {
-            separarRecursivo(nodoActual->right, i, count, a, b);
-            }
-    } else {
-        b.root = nodoActual;
-        b.length = length - a.length;
-        b.height = height;
-        nodoActual->left = nullptr;
-    }
-}
-//SOLO FUNCIONA ANTES DE RECORTAR----------------------------------------------
-void super_string::separar(int i, super_string &a, super_string &b){
-    if (i > length) return;
-    super_string aux;
-    nodo* temp = a.root;
-    int round=0;
-    while(temp!=nullptr){
-        round++;
-        if (round<=i){
-            aux.agregar(temp->c);
-        }
-        else{
-            b.agregar(temp->c);
-        }
-        temp=temp->right;
-    }
-    a=aux;
-}
-//-----------------------------------------------------------------------------
 void super_string::juntar(super_string &s) {
-    if (root == nullptr) {
-        root = s.root;
-        height = s.height;
-        length = s.length;
-        return;
-    }
-
-    if (s.root == nullptr) {
-        return; // No hay nada que juntar
-    }
-
-    super_string ss_total;
-    juntarRecursivo(root, ss_total);
-    juntarRecursivo(s.root, ss_total);
-
-    root = ss_total.root;
-    height = ss_total.height;
-    length = ss_total.length;
+    juntarRecursivo(s.root, *this);
+    length += s.length;
+    height = calcularAltura(root);
 }
 
 void super_string::juntarRecursivo(nodo* nodoActual, super_string &ss_total) {
     if (nodoActual == nullptr) return;
 
-    nodo* left = nodoActual->left;
-    nodo* right = nodoActual->right;
-
-    // Disconnect the node from the original super_string
-    nodoActual->left = nullptr;
-    nodoActual->right = nullptr;
-
-    juntarRecursivo(left, ss_total);
+    juntarRecursivo(nodoActual->left, ss_total);
     ss_total.agregar(nodoActual->c);
-    juntarRecursivo(right, ss_total);
+    juntarRecursivo(nodoActual->right, ss_total);
 }
-
+//-----------------------------------------------------------------------------
 void super_string::limpiar() {
     limpiarRecursivo(root);
     root = nullptr;
@@ -237,3 +244,22 @@ void super_string::limpiarRecursivo(nodo*& nodoActual){
         nodoActual = nullptr;
     }
 }
+//SOLO FUNCIONA ANTES DE RECORTAR----------------------------------------------
+/* void super_string::separar(int i, super_string &a, super_string &despuesDe){
+    if (i > length) return;
+    super_string aux;
+    nodo* temp = a.root;
+    int round=0;
+    while(temp!=nullptr){
+        round++;
+        if (round<=i){
+            aux.agregar(temp->c);
+        }
+        else{
+            despuesDe.agregar(temp->c);
+        }
+        temp=temp->right;
+    }
+    a=aux;
+}
+*/
