@@ -2,11 +2,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-using namespace std;
-
-// Funciones: 
 #include "super_string.cpp"
-
+using namespace std;
 
 int main(){
 
@@ -22,7 +19,6 @@ int main(){
     super_string ss2;
     super_string ss3;
 	
-    // Desarrrollo
     if (!archivo.is_open()){
         cerr << "Error al abrir el archivo." << endl;
         return 1;
@@ -32,6 +28,10 @@ int main(){
         istringstream iss(linea);
         string operacion;
         iss >> operacion;               // Pregunta por operacion
+        if (operacion == "FIN"){
+            archivo.close();
+            return 0;
+        }
         if (operacion == "MOSTRAR"){    // Operacion MOSTRAR
             cout << ss1.stringizar() << endl;  
         }
@@ -73,10 +73,6 @@ int main(){
         if (operacion == "RECORTAR"){
         cout << ss1.recortar() << endl;
  
-        }
-        if (operacion == "FIN"){
-            archivo.close();
-            return 0;
         }
     }   
     archivo.close();
