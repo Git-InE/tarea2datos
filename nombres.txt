@@ -1,0 +1,13 @@
+Nombre:   Bastian Leandro
+Apellido: Rios Lastarria
+Roll:	  202351551-5
+Paralelo: 203
+Programo:
+Desarrollo e implemento la mayoria de la funciones auxiliares y principales requeridas en la pauta, junto con testing profundo probando casos criticos para el programa. Logro aplicar el concepto de recursividad a las funciones para lograr tiempo de ejecucuion más bajos.
+
+Nombre:   Nicolás Andrés
+Apellido: Pérez Lantadilla 
+Roll:     202373528-0
+Paralelo: 200
+Programo:
+Desarrollo e implemento el main, funciones basicas que se ocupan varias veces en el desarrollo de la tarea, testing enfocado a los casos bace.
