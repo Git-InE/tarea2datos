@@ -44,9 +44,7 @@ class super_string {
 /*****
 * int super_string::recortar()
 ******
-* Define caso base si root es nullptr, no hay árbol. Crea un arreglo para almacenar los nodos para luego
-* llamar a función auxiliar inordenArreglo el cual rellenará el arreglo, luego llama a recortarHelp y finaliza
-* actualizando índices con inordenIndice.
+* Crea un arreglo para almacenar los nodos para luego llama a las funciones auxiliares para recortar el arbol
 ******
 * Input:
 * Ninguno
