@@ -2,11 +2,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include "super_string.cpp"
 using namespace std;
-
-// Funciones: 
-#include "super_string.c++"
-
 
 int main(){
 
@@ -22,7 +19,6 @@ int main(){
     super_string ss2;
     super_string ss3;
 	
-    // Desarrrollo
     if (!archivo.is_open()){
         cerr << "Error al abrir el archivo." << endl;
         return 1;
@@ -32,6 +28,10 @@ int main(){
         istringstream iss(linea);
         string operacion;
         iss >> operacion;               // Pregunta por operacion
+        if (operacion == "FIN"){
+            archivo.close();
+            return 0;
+        }
         if (operacion == "MOSTRAR"){    // Operacion MOSTRAR
             cout << ss1.stringizar() << endl;  
         }
@@ -59,12 +59,16 @@ int main(){
         if (operacion == "REVERSO") {
             int l, r;
             iss >> l >> r; // l y r son las posiciones de inicio y fin de la subcadena a invertir (inclusivas)
-            ss1.separar(l, ss1, ss2); // ss2 contiene la parte antes de la subcadena a inver
-            ss2.separar(r - l + 1, ss2, ss3);
+            if ((r < ss1.stringizar().length()-1) || (l > 0)){
+            ss1.separar(l, ss1, ss2); // ss2 contiene la parte antes de la subcadena a invertir
+            ss2.separar(r-l+1, ss2, ss3);
             ss2.reverso();
-            cout << "stringizar ss2: " << ss2.stringizar() << endl;
             ss1.juntar(ss2);
             ss1.juntar(ss3);
+            ss2.limpiar();
+            ss3.limpiar();
+            }
+            else ss1.reverso();
         }
         if (operacion == "RECORTAR"){
         cout << ss1.recortar() << endl;
