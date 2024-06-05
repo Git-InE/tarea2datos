@@ -26,7 +26,7 @@ class super_string {
         void juntarRecursivo(nodo* nodoActual, super_string &ss_total);
         int calcularAltura(nodo* nodoActual);
         void recortarHelp(nodo*& nodoActual, nodo** arreglo, int inicio, int fin);
-
+        void separarRecursivo(nodo* nodo, int i, super_string &a, super_string&b);
     public:
         bool esArbol = false;
         super_string(){};
@@ -211,38 +211,34 @@ void super_string::insertar(int index, char c) {
 * Ninguno
 *****/
 void super_string::separar(int i, super_string& izquierdo, super_string& derecho) {
-    if (i >= length) return;
-
-    if (esArbol) {
-        nodo** enOrden = new nodo*[length];
-        int indice = 0;
-        inordenArreglo(root, enOrden, indice);
-        recortarHelp(izquierdo.root, enOrden, 0, i - 1);
-        recortarHelp(derecho.root, enOrden, i, length - 1);
-        izquierdo.length = i;
-        derecho.length = length - i;
-        izquierdo.height = calcularAltura(izquierdo.root);
-        derecho.height = calcularAltura(derecho.root);
-
-        delete[] enOrden;
-    } else {
-        if (i > length) return;
-        super_string aux;
-        nodo* temp = izquierdo.root;
-        int round = 0;
-        while (temp != nullptr) {
-            round++;
-            if (round <= i) {
-                aux.agregar(temp->c);
-            } else {
-                derecho.agregar(temp->c);
-            }
-            temp = temp->right;
-        }
-        izquierdo = aux;
+    if (root == nullptr) return;
+    separarRecursivo(root, i, izquierdo, derecho);
+    if ((izquierdo.esArbol) || (derecho.esArbol)){
+        izquierdo.recortar();
+        derecho.recortar();
     }
 }
-
+/*****
+* void super_string::separarRecursivo()
+******
+* Función auxiliar para separar el super_string en dos partes recursivamente.
+******
+* Input:
+* nodo* nodo: nodo actual del super_string
+* int i: índice donde se debe separar el super_string
+* super_string &a: referencia al super_string izquierdo
+* super_string &b: referencia al super_string derecho
+******
+* Returns:
+* Ninguno
+*****/
+void super_string::separarRecursivo(nodo* nodo, int i, super_string &a, super_string&b){
+	if(nodo == nullptr) return;
+	separarRecursivo(nodo->left, i, a, b);
+	if(nodo->index<i) a.agregar(nodo->c);
+	else b.agregar(nodo->c);
+	separarRecursivo(nodo->right, i, a, b);
+}
 /*****
 * void super_string::reverso()
 ******
@@ -381,8 +377,9 @@ void super_string::agregar(char c) {
 * Ninguno
 *****/
 void super_string::juntar(super_string &s) {
+    if (s.root == nullptr) return;
     juntarRecursivo(s.root, *this);
-    length += s.length;
+    length = stringizar().length();
     height = calcularAltura(root);
 }
 
