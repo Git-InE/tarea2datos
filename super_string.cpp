@@ -52,6 +52,10 @@ class super_string {
 * Returns:
 * int, la altura del árbol después de recortar
 *****/
+// la funcion recortar corresponde al orden de complejidad O(nlogn) debido a la funcion recortarHelp la cual es O(nlogn)
+// en el peor caso, ya que se realizan O(logn) niveles de recursion para balancear n nodos, el resto de funciones corresponden a O(n)
+// el arbol resultante de la funcion si corresponde a una altura O(logn) en el peor caso, al ser un arbol binaio balanceado
+// por lo que la complejidad final del arbol resultante es O(logn) si se desea buscar un elemento especifico, valor correspondiente a la altura del arbol
 int super_string::recortar() {
     if (root == nullptr) return 0;
     esArbol = true;
